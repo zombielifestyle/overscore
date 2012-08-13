@@ -284,21 +284,18 @@ function groupBy($list, $iterator, $context) {
 function sortedIndex($list, $value, $iterator) {
 }
 
-// function _append($list) {
-//     $args = _rest(func_get_args());
-//     foreach ($args as $arg) {
-//         $list = array_merge($list, (array)$arg);
-//     }
-//     return $list;
-// }
-// 
-// function _prepend($list) {
-//     $args = array_reverse(_rest(func_get_args()));
-//     foreach ($args as $arg) {
-//         $list = array_merge((array)$arg, $list);
-//     }
-//     return $list;
-// }
+function _concat() {
+    $args = func_get_args();
+    $list = array();
+    foreach ($args as $arg) {
+        if (is_array($arg)) {
+            $list = array_merge($list, $arg);
+        } else {
+            $list[] = $arg;
+        }
+    }
+    return $list;
+}
 
 function _first($list, $n = 1) {
     if ($n == 1) {
@@ -380,7 +377,7 @@ function _uniq($list) {
 }
 
 function _zip() {
-    return _apply('array_map', null, array_merge(array(null), func_get_args()));
+    return _apply('array_map', null, _concat(null, func_get_args()));
 }
 
 function _indexOf($list, $value) {

@@ -414,19 +414,24 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
         $this->markTestIncomplete();
     }
 
-    // function testAppend() {
-    //     $list = array(1,2,3);
-    //     $this->assertEquals(array(1,2,3), _append($list));
-    //     $this->assertEquals(array(1,2,3,12), _append($list, 12));
-    //     $this->assertEquals(array(1,2,3,12,16), _append($list, 12, 16));
-    // }
+    function testAppend() {
+        $list = array(1,2,3);
+        $this->assertEquals(array(1,2,3), _concat($list));
+        $this->assertEquals(array(1,2,3,12), _concat($list, 12));
+        $this->assertEquals(array(12,1,2,3), _concat(12, $list));
+        $this->assertEquals(array(null,1,2,3), _concat(null, $list));
+        $this->assertEquals(array(1,2,3,12,16), _concat($list, array(12,16)));
+        $this->assertEquals(array(1,2,3,12,16), _concat($list, 12, 16));
+        // var_dump(_concat(null, array('foo')));
+    }
 
-    // function testPrepend() {
-    //     $list = array(1,2,3);
-    //     $this->assertEquals(array(1,2,3), _prepend($list));
-    //     $this->assertEquals(array(12,1,2,3), _prepend($list, 12));
-    //     $this->assertEquals(array(12,16,1,2,3), _prepend($list, 12, 16));
-    // }
+    function _testPrepend() {
+        $list = array(1,2,3);
+        $this->assertEquals(array(1,2,3), _prepend($list));
+        $this->assertEquals(array(12,1,2,3), _prepend($list, 12));
+        $this->assertEquals(array(array(12),1,2,3), _prepend($list, array(12)));
+        $this->assertEquals(array(12,16,1,2,3), _prepend($list, 12, 16));
+    }
 
     function testFirst() {
         $this->assertEquals(null, _first(array()));
