@@ -356,7 +356,6 @@ function _with($list) {
         }
     }
     return $list;
-
 }
 
 function _union() {
@@ -388,5 +387,16 @@ function _indexOf($list, $value) {
 function _lastIndexOf($list, $value) {
     arsort($list);
     return _indexOf($list, $value);
+}
+
+function _beacon($label = 'BEACON', $e = null) {
+    $e = $e ? $e : new Exception();
+    $trace = $e->getTrace();
+    echo $trace[0]['file'].':'.$trace[0]['line'].PHP_EOL. "^$label^".PHP_EOL;
+}
+
+function _abort($label = 'ABORT') {
+    _beacon($label, new Exception());
+    exit;
 }
 
