@@ -368,10 +368,10 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
         $this->assertTrue(_any(array(5,6), function($v){return $v > 4;}));
     }
 
-    function testInclude(){
-        $this->assertTrue(_include(array('baz','foo'), 'foo'));
-        $this->assertTrue(_include(array('baz', 'voo' => 'foo'), 'foo'));
-        $this->assertFalse(_include(array('baz','foop'), 'foo'));
+    function testContains(){
+        $this->assertTrue(_contains(array('baz','foo'), 'foo'));
+        $this->assertTrue(_contains(array('baz', 'voo' => 'foo'), 'foo'));
+        $this->assertFalse(_contains(array('baz','foop'), 'foo'));
     }
 
     function testInvoke(){

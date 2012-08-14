@@ -239,7 +239,7 @@ function _any($list, $iterator = '_identity', $context = null) {
     return false;
 }
 
-function _include($list, $value){
+function _contains($list, $value){
     return in_array($value, $list);
 }
 
@@ -386,12 +386,7 @@ function _indexOf($list, $value) {
 }
 
 function _lastIndexOf($list, $value) {
-    $index = -1;
-    foreach ($list as $i => $item) {
-        if ($item === $value) {
-            $index = $i;
-        }
-    }
-    return $index;
+    arsort($list);
+    return _indexOf($list, $value);
 }
 
