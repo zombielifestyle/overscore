@@ -11,7 +11,15 @@ class InvokeMe {
 
 class overscore_test extends PHPUnit_Framework_TestCase  {
 
+    function requiresPhp54(){
+        if (PHP_VERSION_ID <= 50400) {
+            $this->markTestSkipped();
+        }
+    }
+
     function testBind() {
+        $this->requiresPhp54();
+
         $f = function(){
             return $this->fro;
         };
@@ -27,7 +35,9 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
         $this->assertEquals("hello world", $value);
     }
 
-    function testCallAndBind() {
+    function testCallWithContext() {
+        $this->requiresPhp54();
+
         $o = (object) array('world' => 'world');
         $value = _call(function($hello, $world){
             return "$hello $this->world";
@@ -42,7 +52,9 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
         $this->assertEquals("hello world", $value);
     }
 
-    function testApplyAndBind() {
+    function testApplyWithContext() {
+        $this->requiresPhp54();
+
         $o = (object) array('world' => 'world');
         $value = _apply(function(){
             return "hello $this->world";
@@ -214,6 +226,8 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
     }
 
     function testEachWithContext(){
+        $this->requiresPhp54();
+
         $o = (object) array('result' => array());
         _each(array(1,2), function($value, $index) {
             $this->result[] = "$value-$index";
@@ -236,6 +250,8 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
     }
 
     function testMapWithContext(){
+        $this->requiresPhp54();
+
         $o = (object) array('prefix' => '-');
         $result = _map(array('a', 'b'), function($a){
             return $this->prefix.$a;
@@ -258,6 +274,8 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
     }
 
     function testReduceWithContext() {
+        $this->requiresPhp54();
+
         $o = (object) array('sep' => '-');
         $result = _reduce(array(1,2,3), function($memo, $value){
             return "$memo$this->sep$value";
@@ -280,6 +298,8 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
     }
 
     function testReduceRightWithContext() {
+        $this->requiresPhp54();
+
         $o = (object) array('sep' => '-');
         $result = _reduceRight(array(1,2,3), function($memo, $value){
             return "$memo$this->sep$value";
@@ -302,6 +322,8 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
     }
 
     function testFindWithContext() {
+        $this->requiresPhp54();
+
         $o = (object) array('cmp' => 2);
         $result = _find(array(1,2,3), function($value){
             return $value == $this->cmp;
@@ -324,6 +346,8 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
     }
 
     function testFilterWithContext() {
+        $this->requiresPhp54();
+
         $o = (object) array('cmp' => 1);
         $result = _filter(array(1,'a',2), function($value) {
             return is_int($value) && $value > $this->cmp;
@@ -346,6 +370,8 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
     }
 
     function testRejectWithContext() {
+        $this->requiresPhp54();
+
         $o = (object) array('cmp' => 1);
         $result = _reject(array(1,'a',2), function($value) {
             return is_int($value) && $value > $this->cmp;

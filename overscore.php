@@ -1,7 +1,7 @@
 <?php
 
 function _bind($f, $context){
-    if ($f instanceof Closure) {
+    if ($f instanceof Closure && method_exists($f, 'bindTo')) {
         return $f->bindTo($context);
     }
     return $f;
