@@ -1,6 +1,6 @@
 <?php
 
-function _bind($f, $context){
+function _bind($f, $context) {
     if ($f instanceof Closure && method_exists($f, 'bindTo')) {
         return $f->bindTo($context);
     }
@@ -15,7 +15,7 @@ function _call($f, $context) {
     return call_user_func_array($f, $args);
 }
 
-function _apply($f, $context, $args = array()){
+function _apply($f, $context, $args = array()) {
     if (is_object($context)) {
         $f = _bind($f, $context);
     }  
@@ -55,7 +55,7 @@ function _after($count, $f) {
     };
 }
 
-function _wrap($f, $wrapper){
+function _wrap($f, $wrapper) {
     return function() use($f, $wrapper) {
         return $wrapper($f);
     };
@@ -97,13 +97,13 @@ function _functions($o) {
     }
 }
 
-function _extends(){
+function _extends() {
     $args = func_get_args();
     return _apply('array_merge', null, $args);
 }
 
 function _pick($haystack) {
-    $needles = array_flip(array_slice(func_get_args(), 1));
+    $needles = array_flip(_rest(func_get_args()));
     return array_intersect_key($haystack, $needles);
 }
 
@@ -116,7 +116,7 @@ function _defaults($a, $defaults) {
     return $a;
 }
 
-function _has($a, $key){
+function _has($a, $key) {
     if (is_array($a)) {
         return array_key_exists($key, $a);
     } 
@@ -148,7 +148,7 @@ function _uniqueId($prefix = null) {
     return $prefix.++$ids[$prefix];
 }
 
-function _escape($str){
+function _escape($str) {
     return htmlentities($str);
 }
 
@@ -239,7 +239,7 @@ function _any($list, $iterator = '_identity', $context = null) {
     return false;
 }
 
-function _contains($list, $value){
+function _contains($list, $value) {
     return in_array($value, $list);
 }
 
@@ -249,7 +249,7 @@ function _invoke($list, $method) {
     }
 }
 
-function _pluck($list, $key){
+function _pluck($list, $key) {
     $result = array();
     foreach ($list as $item) {
         if (_has($item, $key)) {
@@ -259,7 +259,7 @@ function _pluck($list, $key){
     return $result;
 }
 
-function _max($list, $iterator = '_identity', $context = null){
+function _max($list, $iterator = '_identity', $context = null) {
     $max = 0;
     foreach ($list as $item) {
         $max = max(_call($iterator, $context, $item), $max);
@@ -267,7 +267,7 @@ function _max($list, $iterator = '_identity', $context = null){
     return $max;
 }
 
-function _min($list, $iterator = '_identity', $context = null){
+function _min($list, $iterator = '_identity', $context = null) {
     $min = PHP_INT_MAX;
     foreach ($list as $item) {
         $min = min(_call($iterator, $context, $item), $min);

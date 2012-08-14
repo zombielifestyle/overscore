@@ -4,14 +4,14 @@ require 'overscore.php';
 
 class InvokeMe {
     public $invoked = false;
-    function invoke($arg = true){
+    function invoke($arg = true) {
         $this->invoked = $arg;
     }
 }
 
 class overscore_test extends PHPUnit_Framework_TestCase  {
 
-    function requiresPhp54(){
+    function requiresPhp54() {
         if (PHP_VERSION_ID <= 50400) {
             $this->markTestSkipped();
         }
@@ -20,7 +20,7 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
     function testBind() {
         $this->requiresPhp54();
 
-        $f = function(){
+        $f = function() {
             return $this->fro;
         };
         $o = (object) array('fro' => 'zzle');
@@ -29,7 +29,7 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
     }
 
     function testCall() {
-         $value = _call(function($hello, $world){
+        $value = _call(function($hello, $world) {
             return "$hello $world";
         }, null, 'hello', 'world');
         $this->assertEquals("hello world", $value);
@@ -39,14 +39,14 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
         $this->requiresPhp54();
 
         $o = (object) array('world' => 'world');
-        $value = _call(function($hello, $world){
+        $value = _call(function($hello, $world) {
             return "$hello $this->world";
         }, $o, 'hello', 'world');
         $this->assertEquals("hello world", $value);
     }
 
     function testApply() {
-         $value = _apply(function($world){
+        $value = _apply(function($world) {
             return "hello $world";
         }, null, array('world'));
         $this->assertEquals("hello world", $value);
@@ -56,13 +56,13 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
         $this->requiresPhp54();
 
         $o = (object) array('world' => 'world');
-        $value = _apply(function(){
+        $value = _apply(function() {
             return "hello $this->world";
         }, $o, array('world'));
         $this->assertEquals("hello world", $value);
     }
 
-    function testMemoize(){
+    function testMemoize() {
         $calls = 0;
         $f = function () use(&$calls) {
             $calls++;
@@ -76,8 +76,8 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
         $this->assertEquals(2, $calls);
     }
 
-    function testOnce(){
-        $f = function(){
+    function testOnce() {
+        $f = function() {
             static $calls = 0;
             return ++$calls;
         };
@@ -87,7 +87,7 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
     }
 
     function testAfter() {
-        $f = function(){
+        $f = function() {
             return 'finally called!';
         };
         $f2 = _after(2, $f);
@@ -150,7 +150,7 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
         $this->assertEquals($expected, _pick($a, 'a', 'c'));
     }
 
-    function testDefaults(){
+    function testDefaults() {
         $a = array('b' => 'b');
         $defaults = array('a' => 'a', 'c' => 'c');
         $expected = array('a' => 'a', 'b' => 'b', 'c' => 'c');
@@ -197,17 +197,17 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
         $this->assertEquals(2, _uniqueId());
     }
 
-    function testEscape(){
+    function testEscape() {
         $this->assertEquals('&lt;foo', _escape('<foo'));
     }
 
-    function testResult(){
-        $a = array('a' => 'a', 'b' => function(){return 'b';});
+    function testResult() {
+        $a = array('a' => 'a', 'b' => function() {return 'b';});
         $this->assertEquals('a', _result($a, 'a'));
         $this->assertEquals('b', _result($a, 'b'));
     }
 
-    function testEachWithData(){
+    function testEachWithData() {
         $result = array();
         $f = function($value, $index) use(&$result) {
             $result[] = "$value-$index";
@@ -216,7 +216,7 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
         $this->assertEquals(array("1-0", "2-1"), $result);
     }
 
-    function testEachWithNoData(){
+    function testEachWithNoData() {
         $result = array();
         $f = function($value, $index) use(&$result) {
             $result[] = "$value-$index";
@@ -225,7 +225,7 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
         $this->assertEquals(array(), $result);
     }
 
-    function testEachWithContext(){
+    function testEachWithContext() {
         $this->requiresPhp54();
 
         $o = (object) array('result' => array());
@@ -235,39 +235,39 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
         $this->assertEquals(array("1-0", "2-1"), $o->result);
     }
 
-    function testMap(){
-        $result = _map(array('a', 'b'), function($a){
+    function testMap() {
+        $result = _map(array('a', 'b'), function($a) {
             return strtoupper($a);
         });
         $this->assertEquals(array('A','B'), $result);
     }
 
-    function testMapWithNoData(){
-        $result = _map(array(), function($a){
+    function testMapWithNoData() {
+        $result = _map(array(), function($a) {
             return strtoupper($a);
         });
         $this->assertEquals(array(), $result);
     }
 
-    function testMapWithContext(){
+    function testMapWithContext() {
         $this->requiresPhp54();
 
         $o = (object) array('prefix' => '-');
-        $result = _map(array('a', 'b'), function($a){
+        $result = _map(array('a', 'b'), function($a) {
             return $this->prefix.$a;
         }, $o);
         $this->assertEquals(array('-a','-b'), $result);
     }
 
     function testReduce() {
-        $result = _reduce(array(1,2,3), function($memo, $value){
+        $result = _reduce(array(1,2,3), function($memo, $value) {
             return "$memo$value";
         }, 0);
         $this->assertEquals('0123', $result);
     }
 
     function testReduceWithNoData() {
-        $result = _reduce(array(), function($memo, $value){
+        $result = _reduce(array(), function($memo, $value) {
             return "$memo$value";
         }, 0);
         $this->assertEquals(0, $result);
@@ -277,21 +277,21 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
         $this->requiresPhp54();
 
         $o = (object) array('sep' => '-');
-        $result = _reduce(array(1,2,3), function($memo, $value){
+        $result = _reduce(array(1,2,3), function($memo, $value) {
             return "$memo$this->sep$value";
         }, 0, $o);
         $this->assertEquals('0-1-2-3', $result);
     }
 
     function testReduceRight() {
-        $result = _reduceRight(array(1,2,3), function($memo, $value){
+        $result = _reduceRight(array(1,2,3), function($memo, $value) {
             return "$memo$value";
         }, 0);
         $this->assertEquals('0321', $result);
     }
 
     function testReduceRightWithNoData() {
-        $result = _reduceRight(array(), function($memo, $value){
+        $result = _reduceRight(array(), function($memo, $value) {
             return "$memo$value";
         }, 0);
         $this->assertEquals(0, $result);
@@ -301,21 +301,21 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
         $this->requiresPhp54();
 
         $o = (object) array('sep' => '-');
-        $result = _reduceRight(array(1,2,3), function($memo, $value){
+        $result = _reduceRight(array(1,2,3), function($memo, $value) {
             return "$memo$this->sep$value";
         }, 0, $o);
         $this->assertEquals('0-3-2-1', $result);
     }
 
     function testFind() {
-        $result = _find(array(1,2,3), function($value){
+        $result = _find(array(1,2,3), function($value) {
             return $value == 2;
         });
         $this->assertEquals(2, $result);
     }
 
     function testFindWithNoData() {
-        $result = _find(array(), function($value){
+        $result = _find(array(), function($value) {
             return $value == 2;
         });
         $this->assertEquals(null, $result);
@@ -325,7 +325,7 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
         $this->requiresPhp54();
 
         $o = (object) array('cmp' => 2);
-        $result = _find(array(1,2,3), function($value){
+        $result = _find(array(1,2,3), function($value) {
             return $value == $this->cmp;
         }, $o);
         $this->assertEquals(2, $result);
@@ -379,35 +379,35 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
         $this->assertEquals(array(1,'a'), $result);
     }
 
-    function testAll(){
+    function testAll() {
         $this->assertFalse(_all(array(1,0)));
         $this->assertFalse(_all(array(true,'')));
         $this->assertTrue(_all(array(true,1,'a',array(1))));
         $this->assertTrue(_all(array()));
-        $this->assertTrue(_all(array(5,6), function($v){return $v > 4;}));
+        $this->assertTrue(_all(array(5,6), function($v) {return $v > 4;}));
     }
 
-    function testAny(){
+    function testAny() {
         $this->assertFalse(_any(array()));
         $this->assertFalse(_any(array('',0,false,null)));
         $this->assertTrue(_any(array(0,true)));
-        $this->assertTrue(_any(array(5,6), function($v){return $v > 4;}));
+        $this->assertTrue(_any(array(5,6), function($v) {return $v > 4;}));
     }
 
-    function testContains(){
+    function testContains() {
         $this->assertTrue(_contains(array('baz','foo'), 'foo'));
         $this->assertTrue(_contains(array('baz', 'voo' => 'foo'), 'foo'));
         $this->assertFalse(_contains(array('baz','foop'), 'foo'));
     }
 
-    function testInvoke(){
+    function testInvoke() {
         $list = array(new InvokeMe(), new InvokeMe());
         _invoke($list, 'invoke');
         $this->assertEquals(true, $list[0]->invoked);
         $this->assertEquals(true, $list[1]->invoked);
     }
 
-    function testPluck(){
+    function testPluck() {
         $a = array(array('a' => 'a1'), array('a' => 'a2'));
         $this->assertEquals(array('a1','a2'), _pluck($a, 'a'));
     }
@@ -415,13 +415,13 @@ class overscore_test extends PHPUnit_Framework_TestCase  {
     function testMax() {
         $list = array(64, 12, 19, 101);
         $this->assertEquals(101, _max($list));
-        $this->assertEquals(303, _max($list, function($value){return $value*3;}));
+        $this->assertEquals(303, _max($list, function($value) {return $value*3;}));
     }
 
     function testMin() {
         $list = array(64, 12, 19, 101);
         $this->assertEquals(12, _min($list));
-        $this->assertEquals(36, _min($list, function($value){return $value*3;}));
+        $this->assertEquals(36, _min($list, function($value) {return $value*3;}));
     }
 
     function testSortBy() {
